@@ -1,0 +1,121 @@
+
+<html><!--
+		Reference the script(s) on the www.fxblue.com site referring to one or more accounts.
+		The URL of a script for an account is http://www.fxblue.com/users/ACCOUNT/overviewscript
+		These scripts create a document.MTIntelligenceAccounts array containing one object
+		for each account (in the order in which the scripts are referenced). Each object
+		in the array has properties giving the account's equity, balance, closed profit,
+		open profit, and free margin. Javascript can then use this data to render
+		the account information in *any* format - this page is just one example.
+	--><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+	<script type="text/javascript" src="https://www.fxblue.com/users/cfx_hats/overviewscript"></script>
+
+
+	<style type="text/css">
+		TH {
+			padding: 0.25em;
+		}
+		TD {
+			padding: 0.25em 0.25em 0.25em 3em;
+		}
+		.RowHeader {
+			padding-left: 0.25em;
+			padding-right: 2em;
+		}
+		.Totals {
+			background: #F7F7F7;
+			font-weight: bold;
+		}
+	</style>
+
+
+
+	<script type="text/javascript">
+
+		// Called when the page is loaded (by the onload attribute of the <body>) in order to take the
+		// information added to the DOM and render it as HTML
+
+		function onBodyLoad()
+		{
+			// Get the number of accounts which have been added to the page
+			var ctAccounts = document.MTIntelligenceAccounts.length;
+
+			// Construct a table by building the HTML text for it (using string concatenation by
+			// adding items to an array and then doing a join) - simpler than creating a table via the DOM
+			var strHtml = new Array();
+			strHtml.push("<table cellpadding='0' cellspacing='0' border='1'>")
+
+			// Add the HTML for a header row
+			strHtml.push("<tr>");
+			strHtml.push("<th class='RowHeader'>Account</th>");
+			strHtml.push("<th align='right'>Balance</th>");
+			strHtml.push("<th align='right'>Equity</th>");
+			strHtml.push("<th align='right'>Floating</th>");
+			strHtml.push("</tr>");
+
+			// Start building the total of all the included accounts
+			var AccountTotals = {balance: 0, equity: 0, floatingProfit: 0};
+
+			// Loop through each account
+			for (var i = 0; i < ctAccounts; i++) {
+
+				// Get the nth account from the array created by the fxblue.com scripts
+				var Account = document.MTIntelligenceAccounts[i];
+
+				// Build a row in the table describing this account
+				strHtml.push("<tr>");
+				strHtml.push("<td class='RowHeader'><a href=\"http://www.fxblue.com/users/" + Account.userid + "/stats\">" + Account.userid + "</a></td>");
+				strHtml.push("<td align='right'>" + FormatNumber(Account.balance) + "</td>");
+				strHtml.push("<td align='right'>" + FormatNumber(Account.equity) + "</td>");
+				strHtml.push("<td align='right'>" + FormatNumber(Account.floatingProfit) + "</td>");
+				strHtml.push("</tr>");
+
+				// Add this account to the running totals
+				AccountTotals.balance += Account.balance;
+				AccountTotals.equity += Account.equity;
+				AccountTotals.floatingProfit += Account.floatingProfit;
+			}
+
+			// Do a row in the table for the totals
+			strHtml.push("<tr>");
+			strHtml.push("<td class='Totals RowHeader'>Total</td>");
+			strHtml.push("<td class='Totals' align='right'>" + FormatNumber(AccountTotals.balance) + "</td>");
+			strHtml.push("<td class='Totals' align='right'>" + FormatNumber(AccountTotals.equity) + "</td>");
+			strHtml.push("<td class='Totals' align='right'>" + FormatNumber(AccountTotals.floatingProfit) + "</td>");
+			strHtml.push("</tr>");
+
+			// Finish off the HTML for the table
+			strHtml.push("</table>")
+
+			// Dump the HTML for the table into the <div> with id="RenderTableHere"
+			document.getElementById("RenderTableHere").innerHTML = strHtml.join("");
+		}
+
+		// Service function for formatting numbers as #,##0.00
+		function FormatNumber(x)
+		{
+			var str = x.toFixed(2);
+
+			x = str.split('.');
+			x1 = x[0];
+			x2 = x.length > 1 ? '.' + x[1] : '';
+			var rgx = /(\d+)(\d{3})/;
+			while (rgx.test(x1)) {
+				x1 = x1.replace(rgx, '$1' + ',' + '$2');
+			}
+			return x1 + x2;
+		}
+	</script>
+
+
+	</head><body onload="onBodyLoad()">
+		<h1>Example of dynamic rendering of data from MT Intelligence Live</h1>
+
+		<p>My account performance:</p>
+
+		<div id="RenderTableHere"><table cellpadding="0" cellspacing="0" border="1"><tbody><tr><th class="RowHeader">Account</th><th align="right">Balance</th><th align="right">Equity</th><th align="right">Floating</th></tr><tr><td class="RowHeader"><a href="http://www.fxblue.com/users/example/stats">example</a></td><td align="right">4,525.66</td><td align="right">4,525.66</td><td align="right">0.00</td></tr><tr><td class="Totals RowHeader">Total</td><td class="Totals" align="right">4,525.66</td><td class="Totals" align="right">4,525.66</td><td class="Totals" align="right">0.00</td></tr></tbody></table></div>
+
+		<p>(The table above is built entirely using Javascript, and the format can be changed to anything you want.)</p>
+	
+</body></html>
