@@ -141,8 +141,75 @@
 
 			}
 			
-			strHtml.push("</table>")
+			strHtml.push("</table><br>")
 
+
+			strHtml.push("<table cellpadding='0' cellspacing='0' border='1'>")
+			strHtml.push("<tr>");
+			strHtml.push("<th align='right'>tradesPerDay</th>");
+			strHtml.push("<th align='right'>totalClosedPositions</th>");
+			strHtml.push("</tr>");
+
+			for (var i = 0; i < ctAccounts; i++) {
+
+				var Account = document.MTIntelligenceAccounts[i];
+
+				strHtml.push("<tr>");
+				strHtml.push("<td align='right'>" + FormatNumber(Account.tradesPerDay) + "</td>");
+				strHtml.push("<td align='right'>" + FormatNumber(Account.totalClosedPositions) + "</td>");
+				strHtml.push("</tr>");
+
+			}
+			
+
+			strHtml.push("</table><br>")
+
+			strHtml.push("<table cellpadding='0' cellspacing='0' border='1'>")
+			strHtml.push("<tr>");
+			strHtml.push("<th align='right'>type</th>");
+			strHtml.push("<th align='right'>action</th>");
+			strHtml.push("<th align='right'>ticket</th>");
+			strHtml.push("<th align='right'>symbol</th>");
+			strHtml.push("<th align='right'>lots</th>");
+			strHtml.push("<th align='right'>profit</th>");
+			strHtml.push("<th align='right'>swap</th>");
+			strHtml.push("<th align='right'>commission</th>");
+			strHtml.push("<th align='right'>totalProfit</th>");
+			strHtml.push("<th align='right'>sl</th>");
+			strHtml.push("<th align='right'>tp</th>");
+			strHtml.push("<th align='right'>pips</th>");
+			strHtml.push("<th align='right'>openTime</th>");
+			strHtml.push("<th align='right'>magicNumber</th>");
+			strHtml.push("</tr>");
+
+			for (var i = 0; i < ctAccounts; i++) {
+
+				var Account = document.MTIntelligenceAccounts[i];
+				
+				for(var j = 0; j < Account.totalOpenPositions; j++){
+					strHtml.push("<tr>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].type + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].action + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].ticket + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].symbol + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].lots + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].profit + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].swap + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].commission + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].totalProfit + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].sl + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].tp + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].pips + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].openTime + "</td>");
+					strHtml.push("<td align='right'>" + Account.openAndPendingOrders[j].magicNumber + "</td>");
+					strHtml.push("</tr>");
+				}
+				
+
+			}
+			
+
+			strHtml.push("</table><br>")
 			
 			document.getElementById("RenderTableHere").innerHTML = strHtml.join("");
 		}
